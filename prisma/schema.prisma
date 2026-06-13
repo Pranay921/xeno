@@ -1,0 +1,136 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  MARKETER
+}
+
+enum CampaignStatus {
+  DRAFT
+  RUNNING
+  COMPLETED
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      Role      @default(MARKETER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  segments  Segment[]
+  campaigns Campaign[]
+
+  @@map("users")
+}
+
+model Customer {
+  id               String          @id @default(uuid())
+  name             String
+  email            String          @unique
+  phone            String?
+  city             String
+  gender           String
+  totalSpend       Float           @default(0.0)
+  lastPurchaseDate DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  orders           Order[]
+  communications   Communication[]
+
+  @@map("customers")
+}
+
+model Order {
+  id          String   @id @default(uuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  productName String
+  amount      Float
+  quantity    Int
+  orderDate   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([customerId])
+  @@map("orders")
+}
+
+model Segment {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  conditions  Json
+  creatorId   String?
+  creator     User?      @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  campaigns   Campaign[]
+
+  @@index([creatorId])
+  @@map("segments")
+}
+
+model Campaign {
+  id             String          @id @default(uuid())
+  name           String
+  segmentId      String
+  segment        Segment         @relation(fields: [segmentId], references: [id], onDelete: Restrict)
+  channel        String
+  message        String
+  audienceSize   Int             @default(0)
+  status         CampaignStatus  @default(DRAFT)
+  creatorId      String?
+  creator        User?           @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  communications Communication[]
+
+  @@index([segmentId])
+  @@index([creatorId])
+  @@map("campaigns")
+}
+
+model Communication {
+  id                  String               @id @default(uuid())
+  campaignId          String
+  campaign            Campaign             @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  customerId          String
+  customer            Customer             @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  personalizedMessage String
+  status              String               @default("sent") // sent, delivered, failed, opened, clicked, converted
+  sentAt              DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  events              CommunicationEvent[]
+
+  @@index([campaignId])
+  @@index([customerId])
+  @@map("communications")
+}
+
+model CommunicationEvent {
+  id              String        @id @default(uuid())
+  communicationId String
+  communication   Communication @relation(fields: [communicationId], references: [id], onDelete: Cascade)
+  status          String
+  createdAt       DateTime      @default(now())
+
+  @@index([communicationId])
+  @@map("communication_events")
+}
+
+model AIGeneration {
+  id        String   @id @default(uuid())
+  feature   String
+  prompt    String
+  response  Json
+  createdAt DateTime @default(now())
+
+  @@map("ai_generations")
+}
