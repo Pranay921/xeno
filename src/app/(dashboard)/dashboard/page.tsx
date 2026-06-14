@@ -119,10 +119,10 @@ export default async function DashboardPage() {
   ];
 
   const statCards = [
-    { name: "Total Customers", value: totalCustomers.toLocaleString("en-IN"), icon: Users, color: "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-950/40" },
-    { name: "Total Orders", value: totalOrders.toLocaleString("en-IN"), icon: ShoppingBag, color: "text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-950/40" },
-    { name: "Total Revenue", value: `₹${Math.round(totalRevenue).toLocaleString("en-IN")}`, icon: DollarSign, color: "text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/40" },
-    { name: "Active Campaigns", value: totalCampaigns.toLocaleString("en-IN"), icon: Megaphone, color: "text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/40" },
+    { name: "Total Customers", value: totalCustomers.toLocaleString("en-IN"), icon: Users, color: "text-foreground bg-foreground/5 border border-border" },
+    { name: "Total Orders", value: totalOrders.toLocaleString("en-IN"), icon: ShoppingBag, color: "text-foreground bg-foreground/5 border border-border" },
+    { name: "Total Revenue", value: `₹${Math.round(totalRevenue).toLocaleString("en-IN")}`, icon: DollarSign, color: "text-foreground bg-foreground/5 border border-border" },
+    { name: "Active Campaigns", value: totalCampaigns.toLocaleString("en-IN"), icon: Megaphone, color: "text-foreground bg-foreground/5 border border-border" },
   ];
 
   const metrics = [
@@ -134,11 +134,11 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-foreground bg-background">
       {/* Title */}
       <div>
-        <h1 className="font-display font-extrabold text-3xl tracking-tight">Analytics Dashboard</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <h1 className="font-display font-extrabold text-3xl tracking-tight text-foreground">Analytics Dashboard</h1>
+        <p className="text-sm text-foreground/60 mt-1">
           Monitor your customer growth, spending behavior, and campaign performance in real-time.
         </p>
       </div>
@@ -150,15 +150,15 @@ export default async function DashboardPage() {
           return (
             <div
               key={stat.name}
-              className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-sm flex items-center justify-between"
+              className="bg-card p-6 rounded-2xl border border-border shadow-sm flex items-center justify-between"
             >
               <div className="space-y-1">
-                <span className="text-xs font-semibold text-slate-450 dark:text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-semibold text-foreground/60 uppercase tracking-wider">
                   {stat.name}
                 </span>
-                <h2 className="text-2xl font-bold tracking-tight">{stat.value}</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-foreground">{stat.value}</h2>
               </div>
-              <div className={`p-3.5 rounded-2xl ${stat.color}`}>
+              <div className={`p-3 rounded-lg ${stat.color}`}>
                 <Icon className="h-5 w-5" />
               </div>
             </div>
@@ -167,21 +167,21 @@ export default async function DashboardPage() {
       </div>
 
       {/* Campaign Analytics Loop Metrics */}
-      <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-sm">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-6">
+      <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-foreground/60 mb-6">
           Campaign Conversion Funnel Metrics
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {metrics.map((m) => {
             const Icon = m.icon;
             return (
-              <div key={m.name} className="flex flex-col space-y-2.5 p-4 rounded-2xl bg-slate-500/5 dark:bg-slate-900/20 border border-slate-200/40 dark:border-slate-800/40">
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+              <div key={m.name} className="flex flex-col space-y-2.5 p-4 rounded-xl bg-foreground/5 border border-border">
+                <div className="flex items-center gap-2 text-foreground/60">
                   <Icon className="h-4 w-4" />
                   <span className="text-xs font-semibold">{m.name}</span>
                 </div>
-                <span className="text-xl font-extrabold tracking-tight">{m.value}</span>
-                {m.rate && <span className="text-[10px] text-slate-400 italic">{m.rate}</span>}
+                <span className="text-xl font-extrabold tracking-tight text-foreground">{m.value}</span>
+                {m.rate && <span className="text-[10px] text-foreground/40 italic">{m.rate}</span>}
               </div>
             );
           })}

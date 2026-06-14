@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
-  Sparkles,
   ArrowRight,
   Loader2,
   Megaphone,
@@ -57,8 +55,8 @@ export default function AICampaignAssistantClient() {
       }
 
       setDraft(data);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong while generating the campaign draft");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong while generating the campaign draft");
     } finally {
       setGenerating(false);
     }
@@ -90,21 +88,21 @@ export default function AICampaignAssistantClient() {
       // Route to Campaign list page so user can review/launch
       router.push("/campaigns");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Failed to finalize campaign");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to finalize campaign");
       setCreating(false);
     }
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-foreground bg-background">
       {/* Title */}
       <div>
-        <h1 className="font-display font-extrabold text-3xl tracking-tight flex items-center gap-2.5">
-          <Megaphone className="h-8 w-8 text-purple-650 dark:text-purple-400" />
+        <h1 className="font-display font-extrabold text-3xl tracking-tight flex items-center gap-2.5 text-foreground">
+          <Megaphone className="h-8 w-8 text-foreground" />
           AI Campaign Assistant
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <p className="text-sm text-foreground/60 mt-1">
           Describe marketing objectives and get instant suggested audiences, channels, copies, and reasoning.
         </p>
       </div>
@@ -120,12 +118,10 @@ export default function AICampaignAssistantClient() {
           )}
 
           {/* Prompter Panel */}
-          <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full filter blur-xl pointer-events-none"></div>
-
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm relative overflow-hidden">
             <form onSubmit={handleGenerate} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-650 dark:text-slate-350">
+                <label className="text-xs font-semibold text-foreground/70">
                   What is your marketing campaign goal?
                 </label>
                 <textarea
@@ -134,16 +130,16 @@ export default function AICampaignAssistantClient() {
                   placeholder="e.g. Win back inactive customers, reward high-spenders, increase weekend orders"
                   value={goal}
                   onChange={(e) => setGoal(e.target.value)}
-                  className="block w-full px-4 py-3 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
+                  className="block w-full px-4 py-3 text-sm bg-background border border-border rounded-xl focus:outline-none focus:border-foreground/50 text-foreground transition-all resize-none"
                 />
               </div>
 
               <div className="flex justify-between items-center pt-2">
-                <span className="text-[10px] text-slate-400 italic">Powered by Gemini 2.5 Flash</span>
+                <span className="text-[10px] text-foreground/50 italic">Powered by Gemini 2.5 Flash</span>
                 <button
                   type="submit"
                   disabled={generating || !goal.trim()}
-                  className="flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-95 shadow-md shadow-purple-500/10 rounded-xl disabled:opacity-50 transition-opacity"
+                  className="flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold text-background bg-foreground hover:opacity-90 rounded-xl disabled:opacity-50 transition-opacity cursor-pointer animate-pulse"
                 >
                   {generating ? (
                     <>
@@ -163,44 +159,44 @@ export default function AICampaignAssistantClient() {
 
           {/* Suggestions view */}
           {draft && (
-            <div className="glass-panel p-8 rounded-[32px] border border-purple-500/25 dark:border-purple-900/35 shadow-lg space-y-6">
-              <div className="border-b border-slate-200 dark:border-slate-850 pb-4">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+            <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6 animate-pulse">
+              <div className="border-b border-border pb-4">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/60">
                   AI Recommended Strategy
                 </span>
-                <h3 className="font-display font-extrabold text-xl text-slate-900 dark:text-white mt-1">
+                <h3 className="font-display font-extrabold text-xl text-foreground mt-1">
                   {draft.campaignName}
                 </h3>
               </div>
 
               {/* Suggestions grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-slate-500/5 dark:bg-slate-900/20 border border-slate-200/40 dark:border-slate-800/40 rounded-2xl">
-                  <div className="flex items-center gap-1.5 text-slate-400 text-xs font-semibold uppercase tracking-wider">
-                    <User className="h-3.5 w-3.5 text-purple-500" />
+                <div className="p-4 bg-foreground/5 border border-border rounded-xl">
+                  <div className="flex items-center gap-1.5 text-foreground/60 text-xs font-semibold uppercase tracking-wider">
+                    <User className="h-3.5 w-3.5" />
                     Target Segment
                   </div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-2">
+                  <p className="text-sm font-semibold text-foreground mt-2">
                     {draft.segmentDescription}
                   </p>
                 </div>
 
-                <div className="p-4 bg-slate-500/5 dark:bg-slate-900/20 border border-slate-200/40 dark:border-slate-800/40 rounded-2xl">
-                  <div className="flex items-center gap-1.5 text-slate-400 text-xs font-semibold uppercase tracking-wider">
-                    <Compass className="h-3.5 w-3.5 text-purple-500" />
+                <div className="p-4 bg-foreground/5 border border-border rounded-xl">
+                  <div className="flex items-center gap-1.5 text-foreground/60 text-xs font-semibold uppercase tracking-wider">
+                    <Compass className="h-3.5 w-3.5" />
                     Optimal Channel
                   </div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-2">
+                  <p className="text-sm font-semibold text-foreground mt-2">
                     {draft.channel}
                   </p>
                 </div>
 
-                <div className="md:col-span-2 p-4 bg-slate-500/5 dark:bg-slate-900/20 border border-slate-200/40 dark:border-slate-800/40 rounded-2xl">
-                  <div className="flex items-center gap-1.5 text-slate-400 text-xs font-semibold uppercase tracking-wider">
-                    <MessageSquare className="h-3.5 w-3.5 text-purple-500" />
+                <div className="md:col-span-2 p-4 bg-foreground/5 border border-border rounded-xl">
+                  <div className="flex items-center gap-1.5 text-foreground/60 text-xs font-semibold uppercase tracking-wider">
+                    <MessageSquare className="h-3.5 w-3.5" />
                     Personalized Message Copy
                   </div>
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-200 mt-2 bg-white dark:bg-slate-950 p-3 rounded-xl border border-slate-200/30 dark:border-slate-800/65 font-mono">
+                  <p className="text-sm font-medium text-foreground mt-2 bg-background p-3 rounded-xl border border-border font-mono">
                     {draft.message}
                   </p>
                 </div>
@@ -208,32 +204,32 @@ export default function AICampaignAssistantClient() {
 
               {/* Explainability Panels */}
               <div className="space-y-3 pt-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-450 dark:text-slate-500 flex items-center gap-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/50 flex items-center gap-1">
                   <HelpCircle className="h-3.5 w-3.5" /> AI Explainability Log
                 </span>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4.5 rounded-2xl bg-purple-500/5 border border-purple-500/10 text-xs">
-                    <span className="font-bold text-purple-650 dark:text-purple-400 block mb-1">Why Audience?</span>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{draft.reasoningDetails.whyAudience}</p>
+                  <div className="p-4 rounded-xl bg-foreground/5 border border-border text-xs text-foreground">
+                    <span className="font-bold text-foreground block mb-1">Why Audience?</span>
+                    <p className="text-foreground/70 leading-relaxed">{draft.reasoningDetails.whyAudience}</p>
                   </div>
-                  <div className="p-4.5 rounded-2xl bg-purple-500/5 border border-purple-500/10 text-xs">
-                    <span className="font-bold text-purple-650 dark:text-purple-400 block mb-1">Why Channel?</span>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{draft.reasoningDetails.whyChannel}</p>
+                  <div className="p-4 rounded-xl bg-foreground/5 border border-border text-xs text-foreground">
+                    <span className="font-bold text-foreground block mb-1">Why Channel?</span>
+                    <p className="text-foreground/70 leading-relaxed">{draft.reasoningDetails.whyChannel}</p>
                   </div>
-                  <div className="p-4.5 rounded-2xl bg-purple-500/5 border border-purple-500/10 text-xs">
-                    <span className="font-bold text-purple-650 dark:text-purple-400 block mb-1">Why Message?</span>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{draft.reasoningDetails.whyMessage}</p>
+                  <div className="p-4 rounded-xl bg-foreground/5 border border-border text-xs text-foreground">
+                    <span className="font-bold text-foreground block mb-1">Why Message?</span>
+                    <p className="text-foreground/70 leading-relaxed">{draft.reasoningDetails.whyMessage}</p>
                   </div>
                 </div>
               </div>
 
               {/* Submit CTA */}
-              <div className="flex gap-4 pt-4 border-t border-slate-200 dark:border-slate-850">
+              <div className="flex gap-4 pt-4 border-t border-border">
                 <button
                   onClick={handleCreateCampaign}
                   disabled={creating}
-                  className="flex items-center gap-1.5 px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-95 shadow-md shadow-purple-500/10 rounded-xl disabled:opacity-50 transition-opacity"
+                  className="flex items-center gap-1.5 px-6 py-3 text-sm font-semibold text-background bg-foreground hover:opacity-90 rounded-xl disabled:opacity-50 transition-opacity cursor-pointer"
                 >
                   {creating ? (
                     <>
@@ -254,21 +250,21 @@ export default function AICampaignAssistantClient() {
 
         {/* Sidebar Info/Tips */}
         <div className="space-y-6">
-          <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-sm">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-450 dark:text-slate-500 mb-4">
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground/60 mb-4">
               Assistant Ideas
             </h3>
-            <ul className="space-y-3.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              <li className="p-3 bg-slate-500/5 rounded-xl border border-slate-200/20 dark:border-slate-800/40">
-                <span className="font-bold text-purple-600 dark:text-purple-400">Win-back Dormant Users:</span>
+            <ul className="space-y-3.5 text-xs text-foreground/70 leading-relaxed">
+              <li className="p-3 bg-foreground/5 rounded-xl border border-border">
+                <span className="font-bold text-foreground">Win-back Dormant Users:</span>
                 <p className="mt-1">&quot;Bring back high value customers who haven&apos;t ordered in 90 days&quot;</p>
               </li>
-              <li className="p-3 bg-slate-500/5 rounded-xl border border-slate-200/20 dark:border-slate-800/40">
-                <span className="font-bold text-purple-600 dark:text-purple-400">Reward Loyal Shoppers:</span>
+              <li className="p-3 bg-foreground/5 rounded-xl border border-border">
+                <span className="font-bold text-foreground">Reward Loyal Shoppers:</span>
                 <p className="mt-1">&quot;Offer a special discount to users with more than 5 orders from Pune&quot;</p>
               </li>
-              <li className="p-3 bg-slate-500/5 rounded-xl border border-slate-200/20 dark:border-slate-800/40">
-                <span className="font-bold text-purple-600 dark:text-purple-400">Clear Clearance Stock:</span>
+              <li className="p-3 bg-foreground/5 rounded-xl border border-border">
+                <span className="font-bold text-foreground">Clear Clearance Stock:</span>
                 <p className="mt-1">&quot;Launch a WhatsApp promo for Bangalore users to buy headphones&quot;</p>
               </li>
             </ul>

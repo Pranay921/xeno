@@ -31,7 +31,7 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-slate-50 text-slate-900 dark:bg-[#030712] dark:text-slate-100 font-sans transition-colors duration-200">
+      <body className="min-h-full bg-background text-foreground font-sans transition-colors duration-200">
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -1,4 +1,3 @@
-import { GoogleGenAI } from "@google/genai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Standard client for older SDK interface, or newer SDK interface
